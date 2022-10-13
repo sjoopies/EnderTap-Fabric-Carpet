@@ -44,19 +44,11 @@ import java.util.function.Supplier;
 @Mixin({EnderChestBlock.class})
 public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChestBlockEntity> implements Waterloggable {
 
-    private static final BooleanProperty OWNED = BooleanProperty.of("owned");
+
     private static final Text CONTAINER_NAME = Text.translatable("container.enderchest");
 
     protected EnderChestBlockMixin(Settings settings, Supplier<BlockEntityType<? extends EnderChestBlockEntity>> blockEntityTypeSupplier) {
         super(settings, blockEntityTypeSupplier);
-    }
-
-    @Inject(
-            at = {@At("TAIL")},
-            method = {"<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V"}
-    )
-    public void init(Settings settings, CallbackInfo cb) {
-        this.setDefaultState((BlockState)((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(EnderChestBlock.FACING, Direction.NORTH)).with(EnderChestBlock.WATERLOGGED, false)).with(OWNED, false));
     }
 
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
@@ -77,11 +69,6 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
 
     }
 
-    @Overwrite
-    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{EnderChestBlock.FACING, EnderChestBlock.WATERLOGGED, OWNED});
-    }
-
     public boolean hasComparatorOutput(BlockState state) {
         return true;
     }
@@ -94,14 +81,12 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
         if (EnderTapSettings.enderTap && placer instanceof PlayerEntity && world.getBlockEntity(pos) != null) {
             PlayerEntity player = (PlayerEntity)placer;
             if (player.isSneaking()) {
-                world.setBlockState(pos, (BlockState)state.with(OWNED, true));
                 ((IEnderChestBlockEntity)world.getBlockEntity(pos)).setOwner(player);
             }
 
             NbtCompound nbtCompound = stack.getNbt();
             if (nbtCompound != null && nbtCompound.contains("ownerUsername") && nbtCompound.contains("ownerUUID")) {
                 world.getBlockEntity(pos).readNbt(nbtCompound);
-                world.setBlockState(pos, (BlockState)state.with(OWNED, true));
             }
         }
 
@@ -109,12 +94,15 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
 
     @Overwrite
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (EnderTapSettings.enderTap && (Boolean)state.get(OWNED)) {
-            if (world.getBlockEntity(pos) == null) {
-                return ActionResult.success(world.isClient);
-            } else if (((IEnderChestBlockEntity)world.getBlockEntity(pos)).hasOwner()) {
-                UUID playerUUID = ((IEnderChestBlockEntity)world.getBlockEntity(pos)).getOwnerUUID();
-                String playerUsername = ((IEnderChestBlockEntity)world.getBlockEntity(pos)).getOwnerUsername();
+        if (world.getBlockEntity(pos) == null) {
+            return ActionResult.success(world.isClient);
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+
+        if (EnderTapSettings.enderTap && ((IEnderChestBlockEntity)blockEntity).isOwned()) {
+             if (((IEnderChestBlockEntity)blockEntity).hasOwner()) {
+                UUID playerUUID = ((IEnderChestBlockEntity)blockEntity).getOwnerUUID();
+                String playerUsername = ((IEnderChestBlockEntity)blockEntity).getOwnerUsername();
                 PlayerEntity playerEntity = world.getPlayerByUuid(playerUUID);
                 if (!world.isClient()) {
                     player.sendMessage(Text.of(playerUsername), true);
@@ -122,7 +110,6 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
 
                 if (playerEntity != null) {
                     EnderChestInventory enderChestInventory = playerEntity.getEnderChestInventory();
-                    BlockEntity blockEntity = world.getBlockEntity(pos);
                     if (enderChestInventory != null && blockEntity instanceof EnderChestBlockEntity) {
                         BlockPos blockPos = pos.up();
                         if (world.getBlockState(blockPos).isSolidBlock(world, blockPos)) {
@@ -146,15 +133,14 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
                     return ActionResult.CONSUME;
                 }
             } else {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (!world.isClient())
                     EnderTap.LOGGER.error("EnderChest is owned, but does not have a player (owner) assigned. USERNAME: " + ((IEnderChestBlockEntity)blockEntity).getOwnerUsername());
                 return ActionResult.CONSUME;
             }
         } else {
             EnderChestInventory enderChestInventory = player.getEnderChestInventory();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (enderChestInventory != null && blockEntity instanceof EnderChestBlockEntity) {
+
+            if (enderChestInventory != null) {
                 BlockPos blockPos = pos.up();
                 if (world.getBlockState(blockPos).isSolidBlock(world, blockPos)) {
                     return ActionResult.success(world.isClient);

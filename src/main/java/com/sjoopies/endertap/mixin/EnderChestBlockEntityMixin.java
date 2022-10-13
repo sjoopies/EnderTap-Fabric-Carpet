@@ -20,6 +20,7 @@ import java.util.UUID;
 
 @Mixin({EnderChestBlockEntity.class})
 public abstract class EnderChestBlockEntityMixin extends BlockEntity implements Inventory, LidOpenable, IEnderChestBlockEntity {
+    private boolean owned = false;
     private String ownerUsername = null;
     private UUID ownerUUID = null;
     private PlayerEntity ownerPTR = null;
@@ -33,6 +34,7 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
         super.readNbt(nbt);
         this.ownerUsername = nbt.getString("ownerUsername");
         this.ownerUUID = nbt.getUuid("ownerUUID");
+        this.owned = nbt.getBoolean("owned");
         if (this.hasOwner()) {
             this.tryToSetOwnerPTR();
         }
@@ -42,10 +44,15 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         if (this.hasOwner()) {
-            nbt.putUuid("ownerUUID", this.ownerUUID);
             nbt.putString("ownerUsername", this.ownerUsername);
+            nbt.putUuid("ownerUUID", this.ownerUUID);
+            nbt.putBoolean("owned", this.owned);
         }
 
+    }
+
+    public boolean isOwned() {
+        return owned;
     }
 
     public PlayerEntity getOwnerPTR() {
@@ -76,6 +83,7 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
         if (this.hasOwner()) {
             this.tryToSetOwnerPTR();
         }
+        this.owned = true;
 
     }
 

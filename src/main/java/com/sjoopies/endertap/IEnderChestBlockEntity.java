@@ -13,6 +13,8 @@ public interface IEnderChestBlockEntity {
 
     boolean isOwnerLoggedOn();
 
+    boolean isOwned();
+
     void tryToSetOwnerPTR();
 
     void setOwner(PlayerEntity playerEntity);
