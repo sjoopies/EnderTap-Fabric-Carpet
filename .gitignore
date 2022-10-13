@@ -31,7 +31,6 @@ bin/
 # fabric
 
 run/
-/README.md
 /src/main/resources/assets/modid/icon.png
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties
