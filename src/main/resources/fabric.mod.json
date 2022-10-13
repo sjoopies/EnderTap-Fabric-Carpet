@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "endertap",
+  "version": "${version}",
+
+  "name": "Ender Tap",
+  "description": "Ender Tap for Carpet!",
+  "authors": [
+    "sjoopies"
+  ],
+  "contact": {
+
+  },
+
+
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+    ]
+  },
+  "mixins": [
+    "endertap.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "carpet": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  }
+}

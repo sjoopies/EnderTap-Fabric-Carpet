@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.sjoopies.endertap.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CrashReport_noopMixin",
+    "EnderChestBlockMixin",
+    "EnderChestBlockEntityMixin",
+    "EnderChestInventoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
