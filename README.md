@@ -19,3 +19,4 @@ Now you can with the Ender Tap mod for Fabric and Carpet.
 * An owned ender chest (linked to a player) will be placed when you are sneaking.
   * The ender chest will link to the player who is placing it.
 * A regular ender chest will be placed when you are <ins>not</ins> sneaking.
+  *Please let me know of a better way of making the chest owned/unowned. I don't like how sneaking is how you make it owned. Seems too easy.
