@@ -3,7 +3,10 @@ package com.sjoopies.endertap.mixin;
 import com.sjoopies.endertap.EnderTap;
 import com.sjoopies.endertap.EnderTapSettings;
 import com.sjoopies.endertap.IEnderChestBlockEntity;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractChestBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.EnderChestBlock;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.EnderChestBlockEntity;
@@ -18,24 +21,16 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.stat.Stats;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.UUID;
@@ -99,7 +94,7 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (EnderTapSettings.enderTap && ((IEnderChestBlockEntity)blockEntity).isOwned()) {
+        if (EnderTapSettings.enderTap && blockEntity instanceof IEnderChestBlockEntity && ((IEnderChestBlockEntity)blockEntity).isOwned()) {
              if (((IEnderChestBlockEntity)blockEntity).hasOwner()) {
                 UUID playerUUID = ((IEnderChestBlockEntity)blockEntity).getOwnerUUID();
                 String playerUsername = ((IEnderChestBlockEntity)blockEntity).getOwnerUsername();
