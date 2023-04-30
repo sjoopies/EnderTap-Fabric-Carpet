@@ -31,24 +31,29 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
     }
 
     public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.ownerUsername = nbt.getString("ownerUsername");
-        this.ownerUUID = nbt.getUuid("ownerUUID");
-        this.owned = nbt.getBoolean("owned");
-        if (this.hasOwner()) {
-            this.tryToSetOwnerPTR();
-        }
+        if (nbt != null) {
+            super.readNbt(nbt);
+            this.ownerUsername = nbt.getString("ownerUsername");
 
+            if (nbt.get("ownerUUID") != null) {
+                this.ownerUUID = nbt.getUuid("ownerUUID");
+            }
+            this.owned = nbt.getBoolean("owned");
+            if (this.hasOwner()) {
+                this.tryToSetOwnerPTR();
+            }
+        }
     }
 
     public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        if (this.hasOwner()) {
-            nbt.putString("ownerUsername", this.ownerUsername);
-            nbt.putUuid("ownerUUID", this.ownerUUID);
-            nbt.putBoolean("owned", this.owned);
+        if (nbt != null) {
+            super.writeNbt(nbt);
+            if (this.hasOwner()) {
+                nbt.putString("ownerUsername", this.ownerUsername);
+                nbt.putUuid("ownerUUID", this.ownerUUID);
+                nbt.putBoolean("owned", this.owned);
+            }
         }
-
     }
 
     public boolean isOwned() {
