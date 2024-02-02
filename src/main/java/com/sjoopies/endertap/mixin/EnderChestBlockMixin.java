@@ -28,6 +28,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -46,7 +47,7 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
         super(settings, blockEntityTypeSupplier);
     }
 
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         ItemStack itemStack = super.getPickStack(world, pos, state);
         if (world.getBlockEntity(pos) != null && ((IEnderChestBlockEntity)world.getBlockEntity(pos)).hasOwner()) {
             ((IEnderChestBlockEntity)world.getBlockEntity(pos)).writeNbt(itemStack.getOrCreateNbt());

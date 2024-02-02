@@ -1,8 +1,8 @@
 package com.sjoopies.endertap;
 
-import carpet.settings.Rule;
+import carpet.api.settings.Rule;
 
 public class EnderTapSettings {
-    @Rule(desc = "Enables EnderTap", category = {"extras", "endertap"})
+    @Rule(categories = {"extras", "endertap"})
     public static boolean enderTap = false;
 }

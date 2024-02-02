@@ -31,11 +31,10 @@ bin/
 # fabric
 
 run/
-/src/main/resources/assets/modid/icon.png
-/gradle/wrapper/gradle-wrapper.jar
-/gradle/wrapper/gradle-wrapper.properties
-/.github/workflows/build.yml
-/LICENSE
-/gradlew
-/settings.gradle
-/gradlew.bat
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
