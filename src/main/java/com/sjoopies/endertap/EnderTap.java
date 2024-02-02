@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class EnderTap implements CarpetExtension {
     public static final Logger LOGGER = LoggerFactory.getLogger("EnderTap");
-
     public static void noop() {
     }
     static {

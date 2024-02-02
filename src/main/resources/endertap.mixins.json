@@ -1,8 +1,6 @@
 {
   "required": true,
-
   "package": "com.sjoopies.endertap.mixin",
-
   "mixins": [
     "CrashReport_noopMixin",
     "EnderChestBlockMixin",

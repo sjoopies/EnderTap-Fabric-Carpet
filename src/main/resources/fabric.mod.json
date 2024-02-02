@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "endertap",
   "version": "${version}",
-
   "name": "Ender Tap",
   "description": "Ender Tap for Carpet!",
   "authors": [

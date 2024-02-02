@@ -13,7 +13,6 @@ public abstract class EnderChestInventoryMixin extends SimpleInventory implement
     public EnderChestInventoryMixin() {
         super(new ItemStack[0]);
     }
-
     @Accessor("activeBlockEntity")
     public abstract EnderChestBlockEntity getActiveBlockEntity();
 

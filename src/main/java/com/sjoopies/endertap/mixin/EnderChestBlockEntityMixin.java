@@ -59,15 +59,12 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
     public boolean isOwned() {
         return owned;
     }
-
     public PlayerEntity getOwnerPTR() {
         return this.ownerPTR;
     }
-
     public boolean isOwnerLoggedOn() {
         return this.ownerUUID != null && this.getWorld() != null && this.getWorld().getPlayerByUuid(this.ownerUUID) != null;
     }
-
     public void tryToSetOwnerPTR() {
         if (this.getWorld() != null) {
             if (!this.getWorld().isClient()) {

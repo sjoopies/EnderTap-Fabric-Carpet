@@ -1,5 +1,5 @@
 # Ender Tap for Fabric-Carpet
-For Minecraft <ins>1.19.2</ins>
+For Minecraft <ins>1.20.4</ins>
 
 Have you ever wanted to use a hopper with your ender chest? 
 Now you can with the Ender Tap mod for Fabric and Carpet.

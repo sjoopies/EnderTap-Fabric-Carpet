@@ -39,8 +39,6 @@ import java.util.function.Supplier;
 
 @Mixin({EnderChestBlock.class})
 public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChestBlockEntity> implements Waterloggable {
-
-
     private static final Text CONTAINER_NAME = Text.translatable("container.enderchest");
 
     protected EnderChestBlockMixin(Settings settings, Supplier<BlockEntityType<? extends EnderChestBlockEntity>> blockEntityTypeSupplier) {

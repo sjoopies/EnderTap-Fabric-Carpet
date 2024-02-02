@@ -6,7 +6,6 @@ import net.minecraft.nbt.NbtCompound;
 import java.util.UUID;
 
 public interface IEnderChestBlockEntity {
-
     void writeNbt(NbtCompound nbtCompound);
 
     PlayerEntity getOwnerPTR();
