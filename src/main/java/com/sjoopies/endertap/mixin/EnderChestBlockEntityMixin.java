@@ -20,11 +20,10 @@ import java.util.UUID;
 
 @Mixin({EnderChestBlockEntity.class})
 public abstract class EnderChestBlockEntityMixin extends BlockEntity implements Inventory, LidOpenable, IEnderChestBlockEntity {
+    private static DefaultedList<ItemStack> EMPTY_INV = DefaultedList.ofSize(0);
     private boolean owned = false;
     private String ownerUsername = null;
     private UUID ownerUUID = null;
-    private PlayerEntity ownerPTR = null;
-    private static DefaultedList<ItemStack> EMPTY_INV = DefaultedList.ofSize(0);
 
     public EnderChestBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -39,9 +38,6 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
                 this.ownerUUID = nbt.getUuid("ownerUUID");
             }
             this.owned = nbt.getBoolean("owned");
-            if (this.hasOwner()) {
-                this.tryToSetOwnerPTR();
-            }
         }
     }
 
@@ -59,34 +55,11 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
     public boolean isOwned() {
         return owned;
     }
-    public PlayerEntity getOwnerPTR() {
-        return this.ownerPTR;
-    }
+
     public boolean isOwnerLoggedOn() {
-        return this.ownerUUID != null && this.getWorld() != null && this.getWorld().getPlayerByUuid(this.ownerUUID) != null;
-    }
-    public void tryToSetOwnerPTR() {
-        if (this.getWorld() != null) {
-            if (!this.getWorld().isClient()) {
-                PlayerEntity pe = this.getWorld().getPlayerByUuid(this.ownerUUID);
-                if (pe != null && this.ownerUsername.equals(pe.getGameProfile().getName())) {
-                    this.ownerPTR = pe;
-                } else {
-                    this.ownerPTR = null;
-                }
-
-            }
-        }
-    }
-
-    public void setOwner(PlayerEntity player) {
-        this.ownerUsername = player.getGameProfile().getName();
-        this.ownerUUID = player.getGameProfile().getId();
-        if (this.hasOwner()) {
-            this.tryToSetOwnerPTR();
-        }
-        this.owned = true;
-
+        return this.getWorld() != null
+                && this.ownerUUID != null
+                && this.getWorld().getPlayerByUuid(this.ownerUUID) != null;
     }
 
     public UUID getOwnerUUID() {
@@ -98,21 +71,30 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
     }
 
     public boolean hasOwner() {
-        return this.ownerUUID != null && this.ownerUsername != null;
+        return this.ownerUUID != null
+                && this.ownerUsername != null;
+    }
+
+    public PlayerEntity getOwner() {
+        if (!isOwnerLoggedOn())
+            return null;
+        return this.getWorld().getPlayerByUuid(this.ownerUUID);
+    }
+
+    public void setOwner(PlayerEntity player) {
+        this.ownerUsername = player.getGameProfile().getName();
+        this.ownerUUID = player.getGameProfile().getId();
+        this.owned = true;
     }
 
     public EnderChestInventory getOwnerInventory() {
-        if (!EnderTapSettings.enderTap) {
+        if (!this.isOwned()
+                || !EnderTapSettings.enderTap
+                || !this.hasOwner()
+                || !this.isOwnerLoggedOn())
             return null;
-        } else if (!this.hasOwner()) {
-            return null;
-        } else if (!this.isOwnerLoggedOn()) {
-            return null;
-        } else if (this.getOwnerPTR() != null) {
-            return this.getOwnerPTR().getEnderChestInventory();
-        } else {
-            return this.getWorld() != null ? this.getWorld().getPlayerByUuid(this.ownerUUID).getEnderChestInventory() : null;
-        }
+        return this.getOwner().getEnderChestInventory();
+
     }
 
     public boolean hasOwnerInventory() {

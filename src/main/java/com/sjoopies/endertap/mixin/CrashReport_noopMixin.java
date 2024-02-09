@@ -1,6 +1,5 @@
 package com.sjoopies.endertap.mixin;
 
-import com.sjoopies.endertap.EnderTap;
 import net.minecraft.util.crash.CrashReport;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CrashReport_noopMixin {
     @Inject(method = {"initCrashReport"}, at = {@At("HEAD")})
     private static void gameStarted(CallbackInfo ci) {
-        EnderTap.noop();
+        
     }
 }
