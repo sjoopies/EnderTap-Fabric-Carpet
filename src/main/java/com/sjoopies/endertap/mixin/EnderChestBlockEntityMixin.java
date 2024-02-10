@@ -21,7 +21,11 @@ import java.util.UUID;
 @Mixin({EnderChestBlockEntity.class})
 public abstract class EnderChestBlockEntityMixin extends BlockEntity implements Inventory, LidOpenable, IEnderChestBlockEntity {
     private static DefaultedList<ItemStack> EMPTY_INV = DefaultedList.ofSize(0);
+
+
     private boolean owned = false;
+
+
     private String ownerUsername = null;
     private UUID ownerUUID = null;
 
@@ -30,26 +34,25 @@ public abstract class EnderChestBlockEntityMixin extends BlockEntity implements 
     }
 
     public void readNbt(NbtCompound nbt) {
-        if (nbt != null) {
-            super.readNbt(nbt);
-            this.ownerUsername = nbt.getString("ownerUsername");
-
-            if (nbt.get("ownerUUID") != null) {
-                this.ownerUUID = nbt.getUuid("ownerUUID");
-            }
-            this.owned = nbt.getBoolean("owned");
+        if (nbt == null)
+            return;
+        super.readNbt(nbt);
+        this.ownerUsername = nbt.getString("ownerUsername");
+        if (nbt.get("ownerUUID") != null) {
+            this.ownerUUID = nbt.getUuid("ownerUUID");
         }
+        this.owned = nbt.getBoolean("owned");
     }
 
+
     public void writeNbt(NbtCompound nbt) {
-        if (nbt != null) {
-            super.writeNbt(nbt);
-            if (this.hasOwner()) {
-                nbt.putString("ownerUsername", this.ownerUsername);
-                nbt.putUuid("ownerUUID", this.ownerUUID);
-                nbt.putBoolean("owned", this.owned);
-            }
-        }
+        if (nbt != null)
+            return;
+        super.writeNbt(nbt);
+        nbt.putString("ownerUsername", this.ownerUsername);
+        nbt.putUuid("ownerUUID", this.ownerUUID);
+        nbt.putBoolean("owned", this.owned);
+
     }
 
     public boolean isOwned() {

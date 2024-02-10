@@ -21,10 +21,13 @@ public class EnderTap implements CarpetExtension {
         CarpetServer.manageExtension(new EnderTap());
     }
 
+    public static void noop() {
+    }
 
     public void onGameStarted() {
         CarpetServer.settingsManager.parseSettingsClass(EnderTapSettings.class);
     }
+
 
     public Map<String, String> canHasTranslations(String lang) {
         InputStream langFile = EnderTap.class.getClassLoader().getResourceAsStream("assets/endertap/lang/%s.json".formatted(lang));

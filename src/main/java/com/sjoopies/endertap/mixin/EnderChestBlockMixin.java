@@ -54,6 +54,7 @@ public abstract class EnderChestBlockMixin extends AbstractChestBlock<EnderChest
             return itemStack;
         if (enderChestBlockEntity.isOwned() && enderChestBlockEntity.hasOwner())
             enderChestBlockEntity.writeNbt(itemStack.getOrCreateNbt());
+
         return itemStack;
     }
 
